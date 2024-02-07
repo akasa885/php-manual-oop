@@ -7,7 +7,7 @@ use Preps\Components\Http\Request;
 
 class IndexController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $data = [
             'title' => [
@@ -20,6 +20,6 @@ class IndexController extends Controller
 
     public function about()
     {
-        echo "<h2>About Us</h2>";
+        return view('pages.about');
     }
 }

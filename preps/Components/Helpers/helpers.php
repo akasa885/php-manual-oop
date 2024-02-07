@@ -57,15 +57,41 @@ if (!function_exists('config')) {
     }
 }
 
+if (!function_exists('abort')) {
+    /**
+     * Abort the application.
+     *
+     * @param int $code
+     * @return void
+     */
+    function abort($code, $message = null)
+    {
+        http_response_code($code);
+        if (is_null($message)) {
+            $message = match ($code) {
+                404 => 'Not Found',
+                500 => 'Internal Server Error',
+                default => 'Something went wrong',
+            };
+        }
+
+        exit($message);
+    }
+}
+
 if (!function_exists('app')) {
     /**
      * Get the application instance.
      *
      * @return \preps\Components\Foundation\App
      */
-    function app()
+    function app($abstract = null, array $parameters = [])
     {
-        return new \preps\Components\Foundation\App(__DIR__);
+        return \preps\Components\Foundation\App::getInstance();
+        // if (is_null($abstract)) {
+        //     return \preps\Components\Foundation\App::getInstance();
+        // }
+        // return \preps\Components\Foundation\App::getInstance()->make($abstract, $parameters);
     }
 }
 
@@ -129,6 +155,23 @@ if (!function_exists('compact')) {
     }
 }
 
+if (!function_exists('asset')) {
+    /**
+     * Generate an asset path for the application.
+     *
+     * @param string $path
+     * @return string
+     */
+    function asset($path)
+    {
+        try {
+            return rtrim(APP_URL, '/') . '/' . ltrim($path, '/');
+        } catch (\Throwable $th) {
+            abort(404, 'not found');
+        }
+    }
+}
+
 if (!function_exists('redirect')) {
     /**
      * Redirect to a given path.
@@ -151,6 +194,21 @@ if (!function_exists('request')) {
     function request()
     {
         return new \preps\Components\Http\Request;
+    }
+}
+
+if (!function_exists('route')) {
+    /**
+     * Generate a URL for the given route.
+     *
+     * @param string $name
+     * @return string
+     */
+    function route($name)
+    {
+        $routes = app()->router->routesNamed();
+
+        return $routes[$name];
     }
 }
 

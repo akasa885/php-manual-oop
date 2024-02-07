@@ -9,16 +9,13 @@ use Preps\Components\Providers\RouteServiceProviders as ServiceProvider;
 
 class App extends Router
 {
-
-    protected $controller = 'IndexController';
-
-    protected $method = 'index';
-
     protected $param = null;
 
     protected $params = [];
 
     protected $appBasePath;
+
+    protected static $instance;
 
     public function __construct($appPath)
     {
@@ -30,8 +27,12 @@ class App extends Router
 
         $providers->registerProviders();
 
-        // roiuer dispatch will be called from here, return the response and send it to the browser
-        return $this->dispatch();
+        $this->dispatch();
+
+        $this->params = $this->request->params();
+
+        $this->setInstance($this);
+        
     }
 
     public function basepath()
@@ -44,24 +45,22 @@ class App extends Router
         $this->routes = $callback->routes;
     }
 
-    public function bind($controller, $method, $param)
+    public function setInstance($instance)
     {
-        $this->controller = $controller;
-        $this->method = $method;
-        $this->param = $param;
+        $this->instance = $instance;
     }
 
-    public function run()
+    public static function getInstance($appPath = null)
     {
-        $this->controller = new $this->controller;
-        if ($this->param) {
-            call_user_func_array([$this->controller, $this->method], [$this->param]);
-        } else {
-            if (!empty($this->params)) {
-                call_user_func_array([$this->controller, $this->method], $this->params);
-            } else {
-                call_user_func([$this->controller, $this->method]);
-            }
+        if (is_null(static::$instance)) {
+            static::$instance = new static($appPath);
         }
+
+        return static::$instance;
+    }
+
+    public function make($abstract, array $parameters = [])
+    {
+        return new $abstract;
     }
 }
