@@ -1,6 +1,6 @@
 <?php
 
-// require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/preps/Components/Helpers/helpers.php';
 require_once __DIR__ . '/preps/Components/Http/Request.php';
 require_once __DIR__ . '/preps/Components/Http/Response.php';

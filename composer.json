@@ -1,0 +1,15 @@
+{
+    "name": "akasa885/sertif-php",
+    "description": "Untuk kebutuhan sertifikasi PHP",
+    "type": "project",
+    "license": "GPL",
+    "authors": [
+            {
+                "name": "Rizki Akbar",
+                "email": "rixak98@gmail.com"
+            }
+        ],
+    "require": {
+        "mpdf/mpdf": "^8.2"
+    }
+}
